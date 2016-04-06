@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab9sp", "Lab9sp\Lab9sp.csproj", "{63BC792A-7AF4-49E7-8505-FA2B0040E4CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab9spWeb", "Lab9spWeb\Lab9spWeb.csproj", "{3E0EA4D5-EA95-46F3-A1DA-78E0698252A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63BC792A-7AF4-49E7-8505-FA2B0040E4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63BC792A-7AF4-49E7-8505-FA2B0040E4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63BC792A-7AF4-49E7-8505-FA2B0040E4CF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{63BC792A-7AF4-49E7-8505-FA2B0040E4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63BC792A-7AF4-49E7-8505-FA2B0040E4CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63BC792A-7AF4-49E7-8505-FA2B0040E4CF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{3E0EA4D5-EA95-46F3-A1DA-78E0698252A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E0EA4D5-EA95-46F3-A1DA-78E0698252A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E0EA4D5-EA95-46F3-A1DA-78E0698252A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E0EA4D5-EA95-46F3-A1DA-78E0698252A7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
