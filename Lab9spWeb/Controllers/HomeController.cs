@@ -13,6 +13,11 @@ namespace Lab9spWeb.Controllers
         [SharePointContextFilter]
         public ActionResult Index()
         {
+            return View();
+        }
+
+        public ActionResult TotalPedidos()
+        {
             User spUser = null;
 
             var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
@@ -55,18 +60,18 @@ namespace Lab9spWeb.Controllers
                         clientContext.ExecuteQuery();
 
                         var precio = pi["Precio"];
-                        var venta = (double) precio*(double) uds;
+                        var venta = (double)precio * (double)uds;
                         total += venta;
 
                         if (clientes.ContainsKey(item["Title"].ToString()))
                             clientes[item["Title"].ToString()] += venta;
-                        else 
+                        else
                             clientes.Add(item["Title"].ToString(), venta);
                     }
 
-                    var mc = total/clientes.Keys.Count;
+                    var mc = total / clientes.Keys.Count;
 
-                    var model = new Totales() {Numero = pedidosItems.Count, MediaCliente = mc, Total = total};
+                    var model = new Totales() { Numero = pedidosItems.Count, MediaCliente = mc, Total = total };
 
                     return View(model);
                 }
@@ -121,10 +126,98 @@ namespace Lab9spWeb.Controllers
                         var precio = pi["Precio"];
                         var venta = (double) precio*(double) uds;
                         //falta código
+
+                        model.Add(new Pedidos()
+                        {
+                            Cliente = item["Title"].ToString(),
+                            Pedido = pi["Title"].ToString(),
+                            Unidades = uds,
+                            Total = venta
+                        });
                     }
                 }
             }
-            return View();
+            return View(model);
+        }
+
+        public ActionResult Create()
+        {
+            var prodList = new List<Productos>();
+
+            var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
+
+            using (var clientContext = spContext.CreateUserClientContextForSPHost())
+            {
+                if (clientContext != null)
+                {
+                    Web web = clientContext.Web;
+                    clientContext.Load(web);
+                    clientContext.ExecuteQuery();
+
+                    ListCollection lists = web.Lists;
+                    clientContext.Load<ListCollection>(lists);
+                    clientContext.ExecuteQuery();
+
+                    var productos = lists.GetByTitle("Productos");
+                    clientContext.Load(productos);
+                    clientContext.ExecuteQuery();
+
+                    CamlQuery query = new CamlQuery();
+                    ListItemCollection prodItems = productos.GetItems(query);
+                    clientContext.Load(prodItems);
+                    clientContext.ExecuteQuery();
+
+                    foreach (var item in prodItems)
+                    {
+                        int id;
+                        int.TryParse(item["ID"].ToString(), out id);
+
+                        prodList.Add(new Productos()
+                        {
+                            Id = id,
+                            Nombre = item["Title"].ToString()
+                        });
+                    }
+                }
+            }
+            ViewBag.idProducto = new SelectList(prodList, "Id", "Nombre");
+            return View(new Pedidos());
+        }
+
+        [HttpPost]
+        public ActionResult Create(Pedidos model)
+        {
+            var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
+
+            using (var clientContext = spContext.CreateUserClientContextForSPHost())
+            {
+                if (clientContext != null)
+                {
+                    Web web = clientContext.Web;
+                    clientContext.Load(web);
+                    clientContext.ExecuteQuery();
+
+                    ListCollection lists = web.Lists;
+                    clientContext.Load<ListCollection>(lists);
+                    clientContext.ExecuteQuery();
+
+                    var pedidos = lists.GetByTitle("Pedidos");
+                    clientContext.Load(pedidos);
+
+                    ListItemCreationInformation lci = new ListItemCreationInformation();
+                    ListItem pedListItem = pedidos.AddItem(lci);
+                    pedListItem["Title"] = model.Cliente;
+                    pedListItem["Unidades"] = model.Unidades;
+                    pedListItem["Fecha"] = DateTime.Now;
+                    var lv = new FieldLookupValue() {LookupId = model.IdProducto};
+                    pedListItem["Producto"] = lv;
+
+                    pedListItem.Update();
+                    clientContext.ExecuteQuery();
+                }
+            }
+            return RedirectToAction("Index",
+                new {SPHostUrl = SharePointContext.GetSPHostUrl(HttpContext.Request).AbsoluteUri});
         }
     }
 }
